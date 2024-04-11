@@ -1,0 +1,86 @@
+
+How to Build the shared library
+================================
+
+URL: http://tldp.org/HOWTO/Program-Library-HOWTO/index.html
+
+Step 1: Build the library source:
+---------------------------------
+
+ $  gcc -fPIC -o helloworld.c
+
+Step 2: Build the library,(take care, the name of the library must begin with "lib"):
+-------------------------------------------------------------------------------------
+
+ $ gcc -shared -o libhello.so helloworld.o
+
+Step 3: Build the application (Link with Library):
+--------------------------------------------------
+
+ $ gcc -o mainsl main.c -L. -lhello
+
+Step 4: List the files compiled files:
+--------------------------------------
+
+  $ ls
+ 
+ helloworld.c  helloworld.h  helloworld.o  libhello.so  main.c  mainsl
+
+Step 5: Launch the application
+------------------------------
+
+$ mainsl
+Hello World!
+
+Note:  if there is trouble running the program (not finding the library) 
+     export in bash shell or install library into regular path /usr/lib 
+
+  (./mainsl: error while loading shared libraries: libhello.so: cannot open 
+   shared object file: No such file or directory ...)
+
+ export LD_LIBRARY_PATH=.:$LD_LIBRARY_PATH 
+
+
+ Debuginng Library:
+ =================
+
+Turn on the dynamic library environment variable to see what is happening:
+
+sanjeevs@centos-vm:~/test_code/shared_lib>export LD_DEBUG=files <<<===
+sanjeevs@centos-vm:~/test_code/shared_lib>./mainsl
+     26510:
+     26510:     file=libhello.so [0];  needed by ./mainsl [0]
+     26510:     file=libhello.so [0];  generating link map
+     26510:       dynamic: 0x00d814ac  base: 0x00d80000   size: 0x00001598
+     26510:         entry: 0x00d80310  phdr: 0x00d80034  phnum:          4
+     26510:
+     26510:
+     26510:     file=libc.so.6 [0];  needed by ./mainsl [0]
+     26510:     file=libc.so.6 [0];  generating link map
+     26510:       dynamic: 0x007ded9c  base: 0x00000000   size: 0x001585c4
+     26510:         entry: 0x0069ffe0  phdr: 0x0068a034  phnum:         10
+     26510:
+     26510:
+     26510:     calling init: /lib/libc.so.6
+     26510:
+     26510:
+     26510:     calling init: ./libhello.so
+     26510:
+     26510:
+     26510:     initialize program: ./mainsl
+     26510:
+     26510:
+     26510:     transferring control: ./mainsl
+     26510:
+Hello World!
+     26510:
+     26510:     calling fini: ./mainsl [0]
+     26510:
+     26510:
+     26510:     calling fini: ./libhello.so [0]
+     26510:
+     26510:
+     26510:     calling fini: /lib/libc.so.6 [0]
+     26510:
+sanjeevs@centos-vm:~/test_code/shared_lib>
+
