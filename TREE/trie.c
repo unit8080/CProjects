@@ -10,10 +10,12 @@
 #include <string.h>
 #define ALPHABET_SIZE (26)
 #define INDEX(c)  ((int)c - (int)'a')
+
 typedef struct TrieNode_ {
     int value;
     struct TrieNode_ *keys[ALPHABET_SIZE];
 } TrieNode;
+
 typedef struct Trie_ {
     int count;
     TrieNode *root;
@@ -35,7 +37,8 @@ Trie *TrieInit (void)
     trie->count = 0;
     trie->root = newTrieNode();
     return trie;
-}    
+}   
+
 void TrieInsert (Trie *trie, char str[])
 {
     int len = strlen(str);
@@ -54,6 +57,7 @@ void TrieInsert (Trie *trie, char str[])
     /* mark last node as leaf */
     node->value = trie->count;
 }
+
 int TrieSearch (Trie *trie, char key[])
 {
     TrieNode *node = trie->root;
